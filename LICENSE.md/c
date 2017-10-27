@@ -53,10 +53,6 @@ void main ()
     case 1:
       mid = c;
     }
-
-
-
-
   printf ("max=%d\n", max);
   printf ("midlle=%d\n", mid);
   printf ("min=%d\n", min);
