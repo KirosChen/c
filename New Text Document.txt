@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+
+int out( char *argv1,char *argv2);
+int in(char *argv); 
+
+
+int main(int argc,char *argv[]){
+	if(!(strcmp(argv[1],"out"))){
+		if(out(argv[2],argv[3]))
+		printf("Port %s was set \n",*argv[2]);
+		else 
+		printf("Could not open port %s",*argv[2]);
+	}
+
+	if(!(strcmp(argv[2],"in"))){
+		int val = in(argv[2]);
+		if(val) 
+		printf("Port %s is high \n",*argv[2]);
+		else if (!val)
+		printf("Port %s is low \n",*argv[2]);
+		else 
+		printf("Couldn't open port %s",*argv[2]);
+		}
+}
+
+		
+	
+
+
+
+int out(char *argv1 ,char *argv2){
+	int i; 
+	if((strcmp(argv1,"high") && strcmp(argv1,"1") && strcmp(argv1,"on"))==0){
+	system("echo %c > /sys/class/gpio/export",argv2);
+	system("echo out > /sys/class/gpio/gpio%s/direction",argv2);
+	i=system("echo 1 > /sys/class/gpio/gpio%s/value",argv2);
+		if( i == -1)
+		return -1;
+		else 
+		return 1;
+}
+	else if ((strcmp(argv1,"low")&&strcmp(argv1,"0")&&strcmp(argv1,"off"))==0){
+	system("echo %c > /sys/class/gpio/export",*argv2);
+	system("echo out > /sys/class/gpio/gpio%s/direction",*argv2);
+	i=system("echo 0 > /sys/class/gpio/gpio%s/value",*argv2);
+		if( i == -1)
+		return -1;
+		else 
+		return 1;
+	
+	}
+	else {
+	system("echo Wrong Argument");
+	return -1 ;
+	}
+	system("echo %s > /sys/class/gpio/unexport",*argv2);
+}	
+
+int in(char *argv){
+	int i;
+	system("echo %s > /sys/class/gpio/export",argv);
+	system("echo in > /sys/class/gpio/gpio%s/direction",*argv);
+	i=system("cat /sys/class/gpio/gpio%s/value",*argv);
+	if(i == 1)
+		return 1;
+	if(i == 0)
+		return 0;
+	else 
+		return -1;
+}
+
+
